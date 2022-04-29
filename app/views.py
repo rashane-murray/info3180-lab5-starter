@@ -56,7 +56,7 @@ def login():
                 return redirect(url_for("secure_page"))  # they should be redirected to a secure-page route instead
             else:
                 flash('Username or Password is incorrect.', 'danger')
-            return redirect(url_for("home"))  # they should be redirected to a secure-page route instead
+                
     return render_template("login.html", form=form)
 
 
@@ -65,6 +65,18 @@ def login():
 @login_manager.user_loader
 def load_user(id):
     return UserProfile.query.get(int(id))
+
+@app.route("/secure-page")
+@login_required
+def secure_page():
+    return render_template("secure_page.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash('Logout', 'success')
+    return render_template("home.html")
 
 ###
 # The functions below should be applicable to all Flask apps.
